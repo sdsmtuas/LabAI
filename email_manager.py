@@ -1,5 +1,3 @@
-from UI import ui_manager as ui
-
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
@@ -60,7 +58,7 @@ def _get_next_email(silent):
         # loop will attempt to connect to host once every 10 seconds for 5 minutes or until it connects.
         for i in range(30):
             try:
-                mail.login("mike.adam.simon@gmail.com", "8R.wreyK_+t?AL9z")
+                mail.login("sdsmt.vlad@gmail.com", "Password!1")
                 break
             except (BaseException, Exception):
                 time.sleep(10)
@@ -103,12 +101,6 @@ def _get_next_email(silent):
 
             if not silent:
                 print("Adding Incoming Email Event")
-            this_id = str(datetime.now())
-            ui.DisplayQueueManager.request_connection(["Email"], {"title": "Incoming Email",
-                                                                  "color": ui.YELLOW,
-                                                                  "TextBox": ["New Email Detected.",
-                                                                              "Parsing Message..."],
-                                                                  "unique_id": this_id})
 
             # get email ID
             latest_email_uid = data[0].split()[-1]
@@ -144,19 +136,6 @@ def _get_next_email(silent):
                         received["body"] = part.get_payload(decode=True).decode("utf-8")  # decode
                         break
 
-            time.sleep(2)
-
-            ui.DisplayQueueManager.update_data("Incoming Email", {"color": ui.GREEN,
-                                                                  "TextBox": ["New Email Detected.",
-                                                                              "Parsing Message...",
-                                                                              "",
-                                                                              "Message Received From:",
-                                                                              received["name"][0] + " " +
-                                                                              received["name"][1],
-                                                                              "",
-                                                                              "Parsing Successful."],
-                                                                  "lifespan": 3},
-                                               unique_id=this_id)
             if not silent:
                 print("Message Data:", received)
 
@@ -180,15 +159,6 @@ def send_email(email_data, addr="", subject="", body=""):
     :param subject: the subject of the email
     :param body: all of the text the email should contain
     """
-
-    # custom ID for the UI.
-    this_id = str(datetime.now())
-
-    #update the display
-    ui.DisplayQueueManager.request_connection(["Email"], {"title": "Sending Email",
-                                                          "unique_id": this_id,
-                                                          "color": ui.YELLOW,
-                                                          "TextBox": ["Preparing message..."]})
 
     # fromaddr constant, every message is from Mike!
     fromaddr = "mike.adam.simon@gmail.com"
@@ -216,13 +186,6 @@ def send_email(email_data, addr="", subject="", body=""):
     # attach the body of the message as a MIMEText object for formatting reasons.
     msg.attach(MIMEText(body, "plain"))
 
-    # update the display
-    ui.DisplayQueueManager.update_data("Sending Email", {"unique_id": this_id,
-                                                         "TextBox": ["Preparing message...",
-                                                                     "   Built.",
-                                                                     "",
-                                                                     "Sending Message..."]})
-
     # block to login to email service, if network error occurs and cannot login, wait one second and try again.
     # Makes attempts for one minute.
     for i in range(60):
@@ -243,28 +206,11 @@ def send_email(email_data, addr="", subject="", body=""):
 
         # did any error occur
         except (Exception, BaseException):
-            # update the display
-            ui.DisplayQueueManager.update_data("Sending Email", {"unique_id": this_id,
-                                                                 "color": ui.RED,
-                                                                 "TextBox": ["Preparing message...",
-                                                                             "   Built.",
-                                                                             "",
-                                                                             "Sending Message...",
-                                                                             "   Connection Failure!",
-                                                                             "Retrying..."]
-                                                                 })
-            # wait for the display to catch up
+            if not silent:
+                print("An error has occurred when sending the message, trying again...")
+
+            # wait one second
             time.sleep(1)
 
             # go back to start of loop, attempt to send the message again
             continue
-
-    # update the display now that the message is sent
-    ui.DisplayQueueManager.update_data("Sending Email", {"unique_id": this_id,
-                                                         "color": ui.GREEN,
-                                                         "TextBox": ["Preparing message...",
-                                                                     "   Built.",
-                                                                     "",
-                                                                     "Sending Message...",
-                                                                     "   Sent"],
-                                                         "lifespan": 3})
