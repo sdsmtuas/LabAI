@@ -1,7 +1,7 @@
 /*
 Author: Conrad Selig
 Version: 1.0
-Late Update Date: 12 / 28 / 19
+Late Update Date: 02 / 11 / 2020
 
 Description: Scirect draws a single rectangle when given an x, y point
 (for the top left of the rectangle), a width (w) and a height (h). A Scirect
@@ -35,6 +35,23 @@ class scirect {
     this.v_inc = h*(4.0/50) - 1;
     this.h_inc = w*(4.0/50) - 1;
     translate = false;
+  }
+  
+  // constructor
+  scirect(){
+    this.step = 0;
+    this.translate = false;
+  }
+  
+  // setup is only called if the second constructor is used.
+  void setup(int x, int y, int w, int h, int t){
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.t = t;
+    this.v_inc = h*(4.0/50) - 1;
+    this.h_inc = w*(4.0/50) - 1;
   }
   
   // the render function has three main blocks. Translation mode, initial drawing
@@ -144,6 +161,10 @@ class scirect {
   void reset(){
     this.step = 0;
   }
+  
+  void updateThickness(int t){
+    this.t = t;
+  }
 
 }
 
@@ -151,7 +172,7 @@ class scirect {
 /*
 Author: Conrad Selig
 Version: 1.0
-Late Update Date: 12 / 28 / 19
+Late Update Date: 01 / 11 / 2020
 
 Description: Scidroprect draws a single rectangle when given an x, y point
 (for the top left of the rectangle), a width (w) and a height (h). A Scirect
@@ -183,6 +204,21 @@ class scidroprect {
     this.step = 0;
     this.a = 255;
     this.translate = false;
+  }
+  
+  // constructor
+  scidroprect(){
+    this.step = 0;
+    this.a = 255;
+    this.translate = false;
+  }
+  
+  // setup is only called if the second constructor is used.
+  void setup(int x, int y, int w, int h){
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
   }
   
   // the render function has three main blocks. Translation mode, initial drawing
