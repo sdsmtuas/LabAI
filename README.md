@@ -1,1 +1,1 @@
-# LabIA
+# LabAI
